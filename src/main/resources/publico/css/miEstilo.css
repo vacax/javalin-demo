@@ -1,0 +1,15 @@
+h1{
+    color: red;
+}
+
+.barcamp{
+    text-align: center;
+    color: red;
+
+}
+
+body{
+    background-image: url('/img/monumento_barcamp2014.jpg');
+    background-repeat: no-repeat;
+    background-position: 200px 50px;
+}

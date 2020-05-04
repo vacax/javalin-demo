@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title >$titulo</title>
+    <link href="/css/miEstilo.css" rel="stylesheet">
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Matricula</th>
+        <th>Nombre</th>
+        <th>Carrera</th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($estudiante in $listaEstudiante)
+    <tr>
+        <td>$estudiante.matricula</td>
+        <td>$estudiante.nombre</td>
+        <td>$estudiante.carrera</td>
+    </tr>
+    #end
+    </tbody>
+</table>
+</body>
+</html>

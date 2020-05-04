@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Titulo por Defecto</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Matricula</th>
+        <th>Nombre</th>
+        <th>Carrera</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="estudiante : ${listaEstudiante}">
+        <td th:text="${estudiante.matricula}">20011136</td>
+        <td th:text="${estudiante.nombre}">Carlos Camacho</td>
+        <td th:text="${estudiante.carrera}">ITT</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
