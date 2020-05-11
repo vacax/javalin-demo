@@ -1,1 +1,1 @@
-web: java -Djava.runtime.version=11 -jar build/libs/app.jar
+web: java -jar build/libs/app.jar
