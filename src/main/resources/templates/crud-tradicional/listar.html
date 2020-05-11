@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="/templates/crud-tradicional/plantilla.html::head">
+        <title th:text="${titulo}">Listar</title>
+    </head>
+    <body>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4" th:text="${titulo}">....</h1>
+            <p class="lead">Listado de los estudiantes</p>
+        </div>
+
+        <a href="/crud-simple/crear" class="btn btn-primary">Nuevo Estudiante</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Carrera</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="estudiante : ${lista}">
+                <th scope="row">
+                    <a th:text="${estudiante.matricula}" th:href="'visualizar/'+${estudiante.matricula}"/>
+                </th>
+                <td th:text="${estudiante.nombre}">Estudiante</td>
+                <td th:text="${estudiante.carrera}">Carrera</td>
+                <td>
+                    <a th:text="Editar" th:href="'editar/'+${estudiante.matricula}" th class="btn btn-secondary btn-sm"/> |
+                    <a th:text="Eliminar" th:href="'eliminar/'+${estudiante.matricula}" th class="btn btn-danger btn-sm"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+        <!-- incluyendo la parte de javascript del template.        -->
+        <div th:replace="/templates/crud-tradicional/plantilla.html::javascript">
+
+        </div>
+
+    </body>
+
+</html>

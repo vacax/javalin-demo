@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 group 'edu.pucmm.eict'
@@ -26,4 +27,19 @@ dependencies {
     compile "org.freemarker:freemarker:2.3.30"
     compile 'org.thymeleaf:thymeleaf:3.0.5.RELEASE'
     compile "org.apache.velocity:velocity-engine-core:2.2"
+}
+
+shadowJar{
+    baseName = 'app'
+    classifier = ''
+    archiveVersion = ''
+}
+
+/**
+ * tarea necesaria para heroku si optamos por la tarea de Shadowjar
+ * en el archivo Procfile debe estar el siguiente comando:
+ * web: java -jar build/libs/app.jar
+ */
+task stage {
+    dependsOn shadowJar
 }

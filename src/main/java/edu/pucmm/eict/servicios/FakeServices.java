@@ -2,9 +2,9 @@ package edu.pucmm.eict.servicios;
 
 import edu.pucmm.eict.encapsulaciones.Estudiante;
 import edu.pucmm.eict.encapsulaciones.Usuario;
+import edu.pucmm.eict.util.RolesApp;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -14,9 +14,16 @@ public class FakeServices {
 
     private static FakeServices instancia;
     private List<Estudiante> listaEstudiante = new ArrayList<>();
+    private List<Usuario> listaUsuarios = new ArrayList<>();
 
     private FakeServices(){
+        //añadiendo los estudiantes.
         listaEstudiante.add(new Estudiante(20011136, "Carlos Camacho", "ITT"));
+        //anadiendo los usuarios.
+        listaUsuarios.add(new Usuario("admin", "admin", "1234", Set.of(RolesApp.ROLE_ADMIN, RolesApp.CUALQUIERA, RolesApp.LOGUEADO)));
+        listaUsuarios.add(new Usuario("logueado", "logueado", "logueado", Set.of(RolesApp.CUALQUIERA)));
+        listaUsuarios.add(new Usuario("usuario", "usuario", "usuario", Set.of(RolesApp.ROLE_USUARIO)));
+
     }
 
     public static FakeServices getInstancia(){
@@ -35,6 +42,10 @@ public class FakeServices {
     public Usuario autheticarUsuario(String usuario, String password){
         //simulando la busqueda en la base de datos.
         return new Usuario(usuario, "Usuario "+usuario, password);
+    }
+
+    public List<Usuario> getListaUsuarios(){
+        return listaUsuarios;
     }
 
     public List<Estudiante> listarEstudiante(){

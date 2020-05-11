@@ -32,7 +32,7 @@ public class ApiControlador extends BaseControlador {
                   });
 
                   post("/", ctx -> {
-                        //parseando la informacion del POJO.
+                        //parseando la informacion del POJO debe venir en formato json.
                         Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
                         //creando.
                         ctx.json(fakeServices.crearEstudiante(tmp));
