@@ -2,11 +2,14 @@ package edu.pucmm.eict.encapsulaciones;
 
 import java.util.Objects;
 
+/**
+ * Objeto con estructura POJO.
+ */
 public class Estudiante {
 
-    int matricula;
-    String nombre;
-    String carrera;
+    private int matricula;
+    private String nombre;
+    private String carrera;
 
     public Estudiante() {
     }

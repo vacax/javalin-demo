@@ -35,6 +35,7 @@ public class RecibirDatosControlador extends BaseControlador {
          * http://localhost:7000/parametros/20011136/
          */
         app.get("/parametros/:matricula/", ctx -> {
+            //TODO: metodo para validar matricula..
             ctx.result("El Estudiante tiene la matricula: "+ctx.pathParam("matricula"));
         });
 
@@ -47,11 +48,20 @@ public class RecibirDatosControlador extends BaseControlador {
             ctx.result("El Estudiante tiene la matricula: "+ctx.pathParam("matricula")+" - nombre: "+ctx.pathParam("nombre"));
         });
 
+       /* app.get("/parametros/:para1/:para2/:para3", ctx -> {
+            ctx.result("hhhhh");
+        });
+
+        app.get("/parametros/:para4/:para5/:para6", ctx -> {
+            ctx.result("kkkkkk");
+        });*/
+
         /**
          * Ejemplo de información en el cuerpo del mensaje
          * http://localhost:7000/formulario.html para el formulario
          */
         app.post("/parametros", ctx -> {
+            System.out.println("El tipo de datos recibido: "+ctx.header("Content-Type")+ "Matricula:"+ctx.queryParam("matricula"));
             List<String> salida = new ArrayList<>();
             salida.add("Mostrando todos la informacion enviada en el cuerpo:");
             //listando la informacion.
