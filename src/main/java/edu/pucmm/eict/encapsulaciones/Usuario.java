@@ -4,6 +4,9 @@ import edu.pucmm.eict.util.RolesApp;
 
 import java.util.Set;
 
+/**
+ * Clase bajo el formato POJO.
+ */
 public class Usuario {
 
     String usuario;

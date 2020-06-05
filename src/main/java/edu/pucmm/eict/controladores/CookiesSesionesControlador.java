@@ -5,6 +5,8 @@ import edu.pucmm.eict.servicios.FakeServices;
 import edu.pucmm.eict.util.BaseControlador;
 import io.javalin.Javalin;
 
+import javax.servlet.http.Cookie;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class CookiesSesionesControlador extends BaseControlador {
         app.get("/crearCookie/:nombre/:valor", ctx -> {
             //creando una cookie para dos minutos, el parametro indicando en segundos.
             ctx.cookie(ctx.pathParam("nombre"), ctx.pathParam("valor"), 120);
+            ctx.cookie("usuario", "CarlosCamacho", 120);
             ctx.result("Cookie creada...");
         });
 
@@ -40,6 +43,11 @@ public class CookiesSesionesControlador extends BaseControlador {
             ctx.cookieMap().forEach((key, valor) -> {
                 salida.add(String.format("[%s] = [%s]", key, String.join(",", valor)));
             });
+            if(ctx.cookie("usuario")!=null){
+                salida.add("Hola "+ctx.cookie("usuario"));
+            }else{
+                salida.add("No envio la información");
+            }
             //
             ctx.result(String.join("\n", salida));
         });

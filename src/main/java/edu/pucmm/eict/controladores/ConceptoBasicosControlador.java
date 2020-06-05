@@ -21,7 +21,7 @@ public class ConceptoBasicosControlador {
             //
             String mensaje = String.format("Manejador before aplicando a todas las llamadas: %s, Contexto: %s, Metodo: %s",
                     ctx.req.getRemoteHost(),
-                    ctx.req.getServletPath(),
+                    ctx.path(),
                     ctx.req.getMethod());
             //
             System.out.println(mensaje);
@@ -33,10 +33,10 @@ public class ConceptoBasicosControlador {
         app.before("/isc415", ctx -> {
             //
             String mensaje = String.format("Manejador aplicando en el Contexto: %s, Metodo: %s",
-                    ctx.req.getServletPath(),
+                    ctx.path(),
                     ctx.req.getMethod());
             //aplicando cambios o validaciones.
-
+            ctx.attribute("mi-variable", "Hola Mundo"); //variable en el contexto de petición
             //
             System.out.println(mensaje);
         });
@@ -72,7 +72,7 @@ public class ConceptoBasicosControlador {
                     ctx.req.getServletPath(),
                     ctx.req.getMethod());
             //aplicando cambios o validaciones.
-
+            ctx.header("incluido-after","fue ejecutando en bloque after");
             //
             System.out.println(mensaje);
         });

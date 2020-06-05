@@ -21,6 +21,13 @@ public class ZonaAdminClasica extends BaseControlador {
          * Las sesiones pueden ser vulnerables por el robo se sesiones:
          * https://es.wikipedia.org/wiki/Secuestro_de_sesi%C3%B3n
          */
+
+        /*app.before("/admin/", ctx -> {});
+        app.get("/admin/", ctx -> {});
+        app.post("/admin/actualizar", ctx -> {});
+        app.get("/admin/usuarios", ctx -> {});
+        app.after("/admin/", ctx -> {});*/
+
         app.routes(() -> {
             path("/zona-admin-clasica", () -> {
 
