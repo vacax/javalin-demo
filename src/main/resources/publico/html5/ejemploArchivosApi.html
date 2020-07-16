@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplos API Archivos HTML 5</title>
+</head>
+<body>
+
+<form>
+    <input type="file" multiple name="archivos" id="archivos"/>
+</form>
+<p id="listaArchivos">
+     ....
+</p>
+
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+<script>
+    /**
+     * manejo de los archivos seleccionados
+     * @param e
+     */
+    function handleFileSelect(e) {
+        var files = e.target.files;
+        for (var i = 0, f; f = files[i]; i++) {
+           $("#listaArchivos").append("Nombre: "+ f.name +", tipo: "+ f.type+", tamaño: "+ f.size+"<br/>");
+        }
+    }
+
+    //Llamada vía Jquery
+    $("#archivos").change(handleFileSelect);
+
+</script>
+</body>
+</html>

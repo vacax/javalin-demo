@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo GeoLocalizacion</title>
+</head>
+<body>
+     <h1>Ejemplo de GeoLocalizacion</h1>
+     <p id="posicionGps">
+          .....
+     </p>
+
+    <p id="posicionGps2">
+            .....
+        </p>
+
+     <script src="/js/jquery-3.2.1.min.js"></script>
+     <script>
+         var id, cantidad = 0;
+         //Indica las opciones para llamar al GPS.
+         var opcionesGPS = {
+             enableHighAccuracy: true,
+             timeout: 5000,
+             maximumAge: 0
+         }
+
+         $(document).ready(function(){
+             console.log("Ejemplo de Geolocalizacion");
+
+             //Obteniendo la referencia directa.
+             navigator.geolocation.getCurrentPosition(function(geodata){
+                 var coordenadas = geodata.coords;
+                 $("#posicionGps").text("Latitud: "+coordenadas.latitude+", Longitud: "+coordenadas.longitude+", Precisión: "+coordenadas.accuracy+" metros");
+             }, function(){
+                 $("#posicionGps").text("No permite el acceso del API GEO");
+             }, opcionesGPS);
+
+             //Obteniendo el cambio de referencia.
+             id = navigator.geolocation.watchPosition(function(geodata){
+                 var coordenadas = geodata.coords;
+                 $("#posicionGps2").text("Latitud: "+coordenadas.latitude+", Longitud: "+coordenadas.longitude+", Precisión: "+coordenadas.accuracy+" metros, cantidad: "+cantidad);
+                 cantidad++;
+                 if(cantidad>=5){
+                     navigator.geolocation.clearWatch(id);
+                     console.log("Finalizando la trama")
+                 }
+             },function(error){
+                 //recibe un objeto con dos propiedades: code y message.
+                 $("#posicionGps2").text("No permite el acceso del API GEO. Codigo: "+error.code+", mensaje: "+error.message);
+             });
+         });
+     </script>
+</body>
+</html>

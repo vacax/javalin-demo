@@ -1,0 +1,15 @@
+CACHE MANIFEST
+# v7 - Para obligar al cambio bueno mantener una versión.
+# Esto es un comentario.
+
+#Trama que indica que 
+CACHE:
+ejemploIndexedDb.html
+
+NETWORK:
+
+/
+
+FALLBACK:
+
+*.html /html5/offline.html

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo WebStorage</title>
+    <script>
+
+
+        function manejadorPersistencia(e) {
+            console.log("Evento: "+e)
+            console.log('key: '+e.key);
+            console.log('old: '+ e.oldValue);
+            console.log('new: '+ e.newValue);
+            console.log('url: '+ e.url);
+            console.log('storage: '+e.storageArea);
+        }
+
+
+        window.addEventListener('storage', manejadorPersistencia);
+
+        function init() {
+            //Guardando la información en el local.
+            var primerAcceso = localStorage.getItem("fechaAcceso");
+            if(primerAcceso == null) {
+                var tmp = new Date().toUTCString();
+                localStorage.setItem("fechaAcceso", tmp); //Siempre guarda
+                primerAcceso = tmp;
+            }
+
+            //Almacenando información en el ambiente de sesión.
+            sessionStorage.setItem("fechaAcceso", new Date().toUTCString());
+
+            //Mostrando.
+            document.getElementById("primeraVez").innerText ="La primera vez accedido: "+primerAcceso;
+            document.getElementById("ultimaVez").innerText ="La última  vez accedido: "+sessionStorage.getItem("fechaAcceso");
+
+        }
+
+    </script>
+</head>
+<body onload="init()">
+
+<h2>Ejemplo de WebStorage API</h2>
+<p>
+    Ver información utilizando la herramienta de desarrollador del navegador.
+</p>
+<p id="primeraVez">....</p>
+<p id="ultimaVez">....</p>
+</body>
+</html>

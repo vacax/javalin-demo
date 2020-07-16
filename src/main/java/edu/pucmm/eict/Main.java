@@ -4,6 +4,9 @@ import edu.pucmm.eict.controladores.*;
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Main {
 
 
@@ -40,6 +43,11 @@ public class Main {
         new ZonaAdminConRoles(app).aplicarRutas();
         //
         new CrudTradicionalControlador(app).aplicarRutas();
+
+        //Endpoint ejemplos html5.
+        app.get("/fecha", ctx -> {
+            ctx.result(""+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+        });
     }
 
     /**

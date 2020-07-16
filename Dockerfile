@@ -32,5 +32,5 @@ ENTRYPOINT ["java", "-jar", "mi_app.jar"]
 # sudo docker push id_usuario/nombre_a_subir
 # Ejemplo:
 # sudo docker build -t javalin-demo .
-# sudo docker tag javalin-demo vacax/docker-springboot
-# sudo docker push vacax/docker-springboot
+# sudo docker tag javalin-demo vacax/javalin-demo
+# sudo docker push vacax/javalin-demo

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo de Web Worker</title>
+    <script>
+
+        //llamando el webworker
+        var worker = new Worker('/js/webworker.js');
+
+        function inicioProceso() {
+            worker.postMessage({'cmd': 'inicio', 'msg': 'Hola Mundo'});
+        }
+
+        function pararProceso() {
+            worker.postMessage({'cmd': 'parada', 'msg': 'Fin del proceso'});
+        }
+
+        function comandoSinIndicar() {
+            worker.postMessage({'cmd': 'otrocomando', 'msg': '???'});
+        }
+
+        worker.onmessage = function (e) {
+                document.getElementById('result').textContent = e.data;
+        };
+        
+        
+    </script>
+</head>
+<body>
+
+<button onclick="inicioProceso()">Inicio del Worker</button>
+<button onclick="comandoSinIndicar()">Comando suelto</button>
+<button onclick="pararProceso()">Parada</button>
+<output id="result"></output>
+<output id="fecha"></output>
+
+</body>
+</html>

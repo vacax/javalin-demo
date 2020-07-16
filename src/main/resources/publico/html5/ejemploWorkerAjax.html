@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo de Web Worker</title>
+    <script>
+
+        //llamando el webworker
+        var worker = new Worker('/js/webworker-ajax.js');
+
+
+        worker.onmessage = function (e) { //recuperando la información
+            if(e.data.cmd = 'respuesta'){
+                document.getElementById('resultado').textContent = e.data.data;
+            }
+
+        };
+
+        /**
+         * Función para recuperar la fecha utilizando el worker.
+         * Simulamos que estamos cargando información puede tomar mucho tiempo..
+         */
+        function recuperarFecha() {
+            worker.postMessage({'cmd': 'fecha'});
+        }
+        
+        
+    </script>
+</head>
+<body>
+
+<button onclick="recuperarFecha()">Recuperar Fecha Servidor</button>
+<output id="resultado"></output>
+
+</body>
+</html>

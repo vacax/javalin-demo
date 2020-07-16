@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/html5/sinconexion.appcache">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo IndexedDb</title>
+    <script>
+        //dependiendo el navegador busco la referencia del objeto.
+        var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
+
+        //indicamos el nombre y la versión
+        var dataBase = indexedDB.open("programacion_web", 1);
+
+
+        //se ejecuta la primera vez que se crea la estructura
+        //o se cambia la versión de la base de datos.
+        dataBase.onupgradeneeded = function (e) {
+            console.log("Creando la estructura de la tabla");
+
+            //obteniendo la conexión activa
+            active = dataBase.result;
+
+            //creando la colección:
+            //En este caso, la colección, tendrá un ID autogenerado.
+            var estudiantes = active.createObjectStore("estudiantes", { keyPath : 'matricula', autoIncrement : false });
+            var profesores = active.createObjectStore("profesores", { keyPath : 'id', autoIncrement : true });
+
+            //creando los indices. (Dado por el nombre, campo y opciones)
+            estudiantes.createIndex('por_indice', 'indice', {unique : false});
+            profesores.createIndex('por_cedula', 'cedula', {unique : true});
+            
+        };
+
+        //El evento que se dispara una vez, lo
+        dataBase.onsuccess = function (e) {
+            console.log('Proceso ejecutado de forma correctamente');
+        };
+
+        dataBase.onerror = function (e) {
+            console.error('Error en el proceso: '+e.target.errorCode);
+        };
+
+
+        function agregarEstudiante() {
+            var dbActiva = dataBase.result; //Nos retorna una referencia al IDBDatabase.
+
+            //Para realizar una operación de agreagr, actualización o borrar.
+            // Es necesario abrir una transacción e indicar un modo: readonly, readwrite y versionchange
+            var transaccion = dbActiva.transaction(["estudiantes"], "readwrite");
+
+            //Manejando los errores.
+            transaccion.onerror = function (e) {
+                alert(request.error.name + '\n\n' + request.error.message);
+            };
+
+            transaccion.oncomplete = function (e) {
+                document.querySelector("#matricula").value = '';
+                alert('Objeto agregado correctamente');
+            };
+
+            //abriendo la colección de datos que estaremos usando.
+            var estudiantes = transaccion.objectStore("estudiantes");
+
+            //Para agregar se puede usar add o put, el add requiere que no exista
+            // el objeto.
+            var request = estudiantes.put({
+                matricula: document.querySelector("#matricula").value,
+                nombre: document.querySelector("#nombre").value,
+                carrera: document.querySelector("#carrera").value,
+                indice: document.querySelector("#indice").value
+            });
+
+            request.onerror = function (e) {
+               var mensaje = "Error: "+e.target.errorCode;
+               console.error(mensaje);
+               alert(mensaje)
+            };
+
+            request.onsuccess = function (e) {
+                console.log("Datos Procesado con exito");
+                document.querySelector("#matricula").value = "";
+                document.querySelector("#nombre").value = "";
+                document.querySelector("#carrera").value = "";
+                document.querySelector("#indice").value = "";
+            };
+
+
+        }
+
+        /**
+         * Permite listar todos los datos digitados.
+         */
+        function listarDatos() {
+            //por defecto si no lo indico el tipo de transacción será readonly
+            var data = dataBase.result.transaction(["estudiantes"]);
+            var estudiantes = data.objectStore("estudiantes");
+            var contador = 0;
+            var estudiantes_recuperados=[];
+
+            //abriendo el cursor.
+            estudiantes.openCursor().onsuccess=function(e) {
+                //recuperando la posicion del cursor
+                var cursor = e.target.result;
+                if(cursor){
+                    contador++;
+                    //recuperando el objeto.
+                    estudiantes_recuperados.push(cursor.value);
+
+                    //Función que permite seguir recorriendo el cursor.
+                    cursor.continue();
+
+               }else {
+                    console.log("La cantidad de registros recuperados es: "+contador);
+                }
+            };
+
+            //Una vez que se realiza la operación llamo la impresión.
+            data.oncomplete = function () {
+                imprimirTabla(estudiantes_recuperados);
+            }
+
+        }
+
+        /**
+         * 
+         * @param lista_estudiantes
+         */
+        function imprimirTabla(lista_estudiantes) {
+            //creando la tabla...
+            var tabla = document.createElement("table");
+            var filaTabla = tabla.insertRow();
+            filaTabla.insertCell().textContent = "Matricula";
+            filaTabla.insertCell().textContent = "Nombre";
+            filaTabla.insertCell().textContent = "Carrera";
+            filaTabla.insertCell().textContent = "Indice";
+
+            for (var key in lista_estudiantes) {
+                //
+                filaTabla = tabla.insertRow();
+                filaTabla.insertCell().textContent = ""+lista_estudiantes[key].matricula;
+                filaTabla.insertCell().textContent = ""+lista_estudiantes[key].nombre;
+                filaTabla.insertCell().textContent = ""+lista_estudiantes[key].carrera;
+                filaTabla.insertCell().textContent = ""+lista_estudiantes[key].indice;
+            }
+
+            document.getElementById("listaEstudiante").innerHTML="";
+            document.getElementById("listaEstudiante").appendChild(tabla);
+        }
+
+
+        /**
+         * 
+         */
+        function buscarEstudiante() {
+            //recuperando la matricula.
+            var matricula = prompt("Indique la matrícula");
+            console.log("matricula digitada: "+matricula);
+
+            //abriendo la transacción en modo readonly.
+            var data = dataBase.result.transaction(["estudiantes"]);
+            var estudiantes = data.objectStore("estudiantes");
+
+            //buscando estudiante por la referencia al key.
+            estudiantes.get(""+matricula).onsuccess = function(e) {
+                
+                var resultado = e.target.result;
+                console.log("los datos: "+resultado);
+
+                if(resultado !== undefined){
+
+                    var p = document.createElement("p");
+                    p.appendChild(document.createTextNode(""+JSON.stringify(resultado)));
+                    console.log(JSON.stringify(resultado));
+                    document.getElementById("listaEstudiante").innerHTML="";
+                    document.getElementById("listaEstudiante").appendChild(p);
+                }else{
+                    console.log("Estudiante no encontrado...");
+                }
+            };
+           
+        }
+
+        function buscarEstudianteIndice() {
+
+            var consultaIndice = prompt("Indique la matrícula");
+            console.log("El indice consultado: "+consultaIndice);
+            if(consultaIndice === undefined){
+                return;
+            }
+            
+            //por defecto si no lo indico el tipo de transacción será readonly
+            var data = dataBase.result.transaction(["estudiantes"]);
+            var estudiantes = data.objectStore("estudiantes");
+            var contador = 0;
+            var estudiantes_recuperados=[];
+
+            //buscando la referencia por el indice.
+            var indice = estudiantes.index("por_indice");
+
+            //determinando la forma de la consulta
+            var singleKeyRange = IDBKeyRange.only(consultaIndice);
+
+            //abriendo el cursor.
+            indice.openCursor(singleKeyRange).onsuccess=function(e) {
+                //recuperando la posicion del cursor
+                var cursor = e.target.result;
+                if(cursor){
+                    contador++;
+                    //recuperando el objeto.
+                    estudiantes_recuperados.push(cursor.value);
+
+                    //Función que permite seguir recorriendo el cursor.
+                    cursor.continue();
+
+                }else {
+                    console.log("La cantidad de registros recuperados es: "+contador);
+                }
+            };
+
+            //Una vez que se realiza la operación llamo la impresión.
+            data.oncomplete = function () {
+                imprimirTabla(estudiantes_recuperados);
+            }
+
+        }
+        
+        function borrarEstudiante() {
+            
+            var matricula = prompt("Indique la matrícula");
+            console.log("matricula digitada: "+matricula);
+
+            var data = dataBase.result.transaction(["estudiantes"], "readwrite");
+            var estudiantes = data.objectStore("estudiantes");
+
+            estudiantes.delete(matricula).onsuccess = function (e) {
+                console.log("Estudiante eliminado...");
+            };
+        }
+        
+        function cambiarNombreEstudiante() {
+            
+            //recuperando la matricula.
+            var matricula = prompt("Indique la matrícula");
+            console.log("matricula digitada: "+matricula);
+
+            var nombre = prompt("Indique el nombre");
+            console.log("el nombre digitada: "+nombre);
+
+            //abriendo la transacción en modo escritura.
+            var data = dataBase.result.transaction(["estudiantes"],"readwrite");
+            var estudiantes = data.objectStore("estudiantes");
+
+            //buscando estudiante por la referencia al key.
+            estudiantes.get(""+matricula).onsuccess = function(e) {
+
+                var resultado = e.target.result;
+                console.log("los datos: "+JSON.stringify(resultado));
+
+                if(resultado !== undefined){
+
+                    resultado.nombre = nombre;
+
+                    var solicitudUpdate = estudiantes.put(resultado);
+                    
+                    //eventos.
+                    solicitudUpdate.onsuccess = function (e) {
+                       console.log("Datos Actualizados....");
+                    }
+
+                    solicitudUpdate.onerror = function (e) {
+                        console.error("Error Datos Actualizados....");
+                    }
+
+                }else{
+                    console.log("Estudiante no encontrado...");
+                }
+            };
+
+            
+        }
+
+
+    </script>
+</head>
+<body>
+    <h1>Ejemplo de IndexedDb</h1>
+    Matrícula: <input type="number" id="matricula"/><br/>
+    Nombre: <input type="text" id="nombre"/> <br/>
+    Carrera: <input type="text" id="carrera"/><br/>
+    Indice: <input type="text" id="indice"/><br/>
+    <button onclick="agregarEstudiante()">Guardar</button>
+    <button onclick="listarDatos()">Listar Datos</button>
+    <button onclick="buscarEstudiante()">Buscar Estudiante</button>
+    <button onclick="buscarEstudianteIndice()">Buscar Estudiante Por Indice</button>
+    <button onclick="borrarEstudiante()">Borrar Estudiante</button>
+    <button onclick="cambiarNombreEstudiante()">Modificar Nombre Estudiante</button>
+    <div id="listaEstudiante"></div>
+    <a href="/html5/ejemploGeoLocalizacion.html">Ir al ruta Geolocalizacion</a>
+</body>
+</html>
