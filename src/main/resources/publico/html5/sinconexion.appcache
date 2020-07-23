@@ -1,15 +1,17 @@
 CACHE MANIFEST
-# v7 - Para obligar al cambio bueno mantener una versión.
+# v12 - Para obligar al cambio bueno mantener una versión.
 # Esto es un comentario.
 
 #Trama que indica que 
 CACHE:
-ejemploIndexedDb.html
+/html5/
+/html5/ejemploIndexedDb.html
+/html5/index.html
+/html5/offline.html
 
 NETWORK:
-
 /
+/api/*
 
 FALLBACK:
-
-*.html /html5/offline.html
+/ /html5/offline.html
