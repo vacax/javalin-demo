@@ -20,6 +20,10 @@
             worker.postMessage({'cmd': 'otrocomando', 'msg': '???'});
         }
 
+        /**
+         * El evento recibido desde el Web Worker
+         * @param e
+         */
         worker.onmessage = function (e) {
                 document.getElementById('result').textContent = e.data;
         };

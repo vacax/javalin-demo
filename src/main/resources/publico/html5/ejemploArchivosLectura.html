@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ejemplos API Archivos HTML 5</title>
-    <style>
-        .preliminar{
-            width: 200px;
-            height: 200px;
-        }
-    </style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ejemplos API Archivos HTML 5</title>
+        <style>
+            .preliminar{
+                width: 200px;
+                height: 200px;
+            }
+        </style>
+    </head>
+    <body>
 
-<form>
-    <input type="file" multiple name="archivos"  id="archivos"/>
-</form>
-<p id="listaArchivos">
+        <form>
+            <input type="file" multiple name="archivos"  id="archivos"/>
+        </form>
+        <!-- Listando los archivos seleccionados-->
+        <p id="listaArchivos">
 
-</p>
+        </p>
 
-<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-<script>
-    /**
-     * manejo de los archivos seleccionados
-     * @param e
-     */
-    function handleFileSelect(e) {
-        var files = e.target.files;
-        for (var i = 0, f; f = files[i]; i++) {
+        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script>
+            /**
+             * manejo de los archivos seleccionados
+             * @param e
+             */
+            function handleFileSelect(e) {
+                var files = e.target.files;
+                for (var i = 0, f; f = files[i]; i++) {
 
-            //validamos que sea imagen.
-            if (!f.type.match('image.*')) {
-                continue;
+                    //validamos que sea imagen.
+                    if (!f.type.match('image.*')) {
+                        continue;
+                    }
+
+                    //Variable de lectura.
+                    var reader = new FileReader();
+
+                    //Creando una objeto tipo img html
+                    var img = document.createElement("img");
+                    img.file = f;
+                    img.classList.add("preliminar");
+                    $("#listaArchivos").append(img);
+
+                    //método cuando se complete la carga.
+                    reader.onload = (function(aImg) { return function(e) {
+                        console.log("La ruta: "+e.target.result);
+                        aImg.src = e.target.result;
+                    }; })(img);
+
+                    //indicando la forma de lectura.
+                    reader.readAsDataURL(f);
+                }
             }
 
-            //Variable de lectura.
-            var reader = new FileReader();
+            //Llamada vía Jquery
+            $("#archivos").change(handleFileSelect);
 
-            var img = document.createElement("img");
-            img.file = f;
-            img.classList.add("preliminar");
-            $("#listaArchivos").append(img);
-
-            //método cuando se complete la carga.
-            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-
-            //indicando la forma de lectura.
-            reader.readAsDataURL(f);
-        }
-    }
-
-    //Llamada vía Jquery
-    $("#archivos").change(handleFileSelect);
-
-</script>
-</body>
+        </script>
+    </body>
 </html>
