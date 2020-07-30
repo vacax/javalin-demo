@@ -23,6 +23,8 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     //Procesamiento JSON.
     compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+    //Agregando el OpenApi3
+    compile "io.javalin:javalin-openapi:3.9.1"
     //sistemas de plantilla:
     compile "org.freemarker:freemarker:2.3.30"
     compile 'org.thymeleaf:thymeleaf:3.0.5.RELEASE'

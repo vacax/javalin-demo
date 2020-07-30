@@ -3,6 +3,10 @@ package edu.pucmm.eict;
 import edu.pucmm.eict.controladores.*;
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
+import io.javalin.plugin.openapi.OpenApiOptions;
+import io.javalin.plugin.openapi.OpenApiPlugin;
+import io.javalin.plugin.openapi.ui.SwaggerOptions;
+import io.swagger.v3.oas.models.info.Info;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +24,7 @@ public class Main {
             config.addStaticFiles("/publico"); //desde la carpeta de resources
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
+            config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
         }).start(getHerokuAssignedPort());
 
         //creando el manejador
@@ -60,6 +65,13 @@ public class Main {
             return Integer.parseInt(processBuilder.environment().get("PORT"));
         }
         return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
+    }
+
+    private static OpenApiOptions getOpenApiOptions() {
+        Info applicationInfo = new Info()
+                .version("1.0")
+                .description("My Application");
+        return new OpenApiOptions(applicationInfo).path("/openapi").swagger(new SwaggerOptions("/openapi-ui"));
     }
 
 }
