@@ -23,6 +23,12 @@ public class EstudianteWebServices {
     }
 
     @WebMethod
+    public String otroMetodo(String hola){
+        System.out.println("Ejecuntado en el servidor.");
+        return "Hola Mundo "+hola+", :-D";
+    }
+
+    @WebMethod
     public List<Estudiante> getListaEstudiante(){
         return fakeServices.listarEstudiante();
     }

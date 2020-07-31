@@ -32,6 +32,10 @@ public class ApiControlador extends BaseControlador {
                         ctx.json(fakeServices.listarEstudiante());
                     });
 
+                    get("/:matricula", ctx -> {
+                        ctx.json(fakeServices.getEstudiantePorMatricula(ctx.pathParam("matricula", Integer.class).get()));
+                    });
+
                     post("/", ctx -> {
                         //parseando la informacion del POJO debe venir en formato json.
                         Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
