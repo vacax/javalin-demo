@@ -25,7 +25,14 @@ public class Main {
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
             config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
-        }).start(getHerokuAssignedPort());
+
+        });
+
+        //El contexto SOAP debe estar creando antes de inicio del servidor.
+        new SoapControlador(app).aplicarRutas();
+
+        //
+        app.start(getHerokuAssignedPort());
 
         //creando el manejador
         app.get("/", ctx -> ctx.result("Hola Mundo en Javalin :-D"));
@@ -48,6 +55,7 @@ public class Main {
         new ZonaAdminConRoles(app).aplicarRutas();
         //
         new CrudTradicionalControlador(app).aplicarRutas();
+
 
         //Endpoint ejemplos html5.
         app.get("/fecha", ctx -> {

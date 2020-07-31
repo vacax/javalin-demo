@@ -29,6 +29,13 @@ dependencies {
     compile "org.freemarker:freemarker:2.3.30"
     compile 'org.thymeleaf:thymeleaf:3.0.5.RELEASE'
     compile "org.apache.velocity:velocity-engine-core:2.2"
+    //libreria para SOAP de Jetty https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http-spi
+    compile group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '9.4.30.v20200611'
+    //incluyendo las librerias de javax.ee en java 11.
+    //https://blog.codefx.org/java/java-11-migration-guide/
+    compile "org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438"
+    compile "com.sun.xml.ws:jaxws-rt:2.3.1"
+    compile "com.sun.xml.ws:rt:2.3.1"
 }
 
 shadowJar{
