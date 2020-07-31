@@ -49,7 +49,10 @@ public class ExcepcionesControlador extends BaseControlador {
            ctx.html("Ocurrió un error en la conversacion numerica: "+exception.getLocalizedMessage());
         });
 
-        app.error(404, ctx -> {
+        /**
+         * Solo aplica cuando venga para vistas html.
+         */
+        app.error(404,"text/html", ctx -> {
             ctx.html("<h1>Recurso consultado no existe... Favor verificar...</h1>");
         });
     }

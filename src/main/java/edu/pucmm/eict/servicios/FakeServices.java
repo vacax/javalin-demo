@@ -2,6 +2,7 @@ package edu.pucmm.eict.servicios;
 
 import edu.pucmm.eict.encapsulaciones.Estudiante;
 import edu.pucmm.eict.encapsulaciones.Usuario;
+import edu.pucmm.eict.util.NoExisteEstudianteException;
 import edu.pucmm.eict.util.RolesApp;
 
 import java.util.*;
@@ -71,7 +72,7 @@ public class FakeServices {
     public Estudiante actualizarEstudiante(Estudiante estudiante){
         Estudiante tmp = getEstudiantePorMatricula(estudiante.getMatricula());
         if(tmp == null){//no existe, no puede se actualizado
-            throw new RuntimeException("No puedo actualizar");
+            throw new NoExisteEstudianteException("No Existe el estudiante: "+estudiante.getMatricula());
         }
         tmp.mezclar(estudiante);
         return tmp;
