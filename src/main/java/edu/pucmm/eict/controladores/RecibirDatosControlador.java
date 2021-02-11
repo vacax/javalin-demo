@@ -48,13 +48,14 @@ public class RecibirDatosControlador extends BaseControlador {
             ctx.result("El Estudiante tiene la matricula: "+ctx.pathParam("matricula")+" - nombre: "+ctx.pathParam("nombre"));
         });
 
-       /* app.get("/parametros/:para1/:para2/:para3", ctx -> {
+        app.get("/parametros/:para1/:para2/:para3", ctx -> {
             ctx.result("hhhhh");
         });
 
+        //Llamada ambigua... puede que ejecute como que no.
         app.get("/parametros/:para4/:para5/:para6", ctx -> {
             ctx.result("kkkkkk");
-        });*/
+        });
 
         /**
          * Ejemplo de información en el cuerpo del mensaje

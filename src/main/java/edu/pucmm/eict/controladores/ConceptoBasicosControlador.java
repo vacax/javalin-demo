@@ -3,6 +3,9 @@ package edu.pucmm.eict.controladores;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import org.eclipse.jetty.io.WriterOutputStream;
+
+import java.io.PrintWriter;
 
 public class ConceptoBasicosControlador {
 
@@ -32,8 +35,8 @@ public class ConceptoBasicosControlador {
          */
         app.before("/isc415", ctx -> {
             //
-            String mensaje = String.format("Manejador aplicando en el Contexto: %s, Metodo: %s",
-                    ctx.path(),
+            String mensaje = String.format("Manejador before aplicando en el Contexto: %s, Metodo: %s",
+                    ctx.req.getRequestURI(),
                     ctx.req.getMethod());
             //aplicando cambios o validaciones.
             ctx.attribute("mi-variable", "Hola Mundo"); //variable en el contexto de petición
@@ -48,6 +51,12 @@ public class ConceptoBasicosControlador {
             String metodo = ctx.req.getMethod(); //la información del encapsulada del cliente.
             metodo = ctx.method();
             ctx.res.setHeader("asignatura", "ISC-415");
+            ctx.header("otro-header", "Mi header enviado");
+            //La forma utilizando HttpServletResponse
+            /*PrintWriter printWriter = new PrintWriter(ctx.res.getOutputStream());
+            printWriter.println("Endpoint "+ctx.req.getRequestURI()+" -  Metodo: "+metodo);
+            printWriter.flush();
+            printWriter.close();*/
             ctx.result("Endpoint "+ctx.req.getRequestURI()+" -  Metodo: "+metodo);
         });
 
@@ -68,11 +77,13 @@ public class ConceptoBasicosControlador {
          */
         app.after("/isc415", ctx -> {
             //
-            String mensaje = String.format("Manejador aplicando en el Contexto: %s, Metodo: %s",
-                    ctx.req.getServletPath(),
+            String mensaje = String.format("Manejador after aplicando en el Contexto: %s, Metodo: %s",
+                    ctx.req.getRequestURI(),
                     ctx.req.getMethod());
             //aplicando cambios o validaciones.
             ctx.header("incluido-after","fue ejecutando en bloque after");
+            //ctx.header("nombre"); ctx.req.getHeader("nombre") desde el cliente.
+            //ctx.header("otro-header", ctx.res.getHeader("otro-header").toUpperCase()+" - Incluir otra cosa....");
             //
             System.out.println(mensaje);
         });
