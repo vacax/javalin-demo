@@ -57,7 +57,7 @@ public class ConceptoBasicosControlador {
             printWriter.println("Endpoint "+ctx.req.getRequestURI()+" -  Metodo: "+metodo);
             printWriter.flush();
             printWriter.close();*/
-            ctx.result("Endpoint "+ctx.req.getRequestURI()+" -  Metodo: "+metodo);
+            ctx.result("Endpoint "+ctx.req.getRequestURI()+" -  Metodo: "+metodo+" - Variable: "+ctx.attribute("mi-variable"));
         });
 
         /**
@@ -103,6 +103,14 @@ public class ConceptoBasicosControlador {
         app.patch("/isc415", this::procesamiento);
 
         app.head("/isc415", this::procesamiento);
+
+        /**
+         * bloque retornar el mimetype del archivo para el cache.
+         */
+        app.after("/html5/sinconexion.appcache", ctx -> {
+            System.out.println("Llamando el cache....");
+            ctx.contentType("text/cache-manifest");
+        });
 
     }
 

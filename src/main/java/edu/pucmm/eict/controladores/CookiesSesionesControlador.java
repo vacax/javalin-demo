@@ -12,6 +12,8 @@ import java.util.List;
 
 public class CookiesSesionesControlador extends BaseControlador {
 
+    public static List<String> lista = new ArrayList<>();
+
     public CookiesSesionesControlador(Javalin app) {
         super(app);
     }
@@ -94,6 +96,14 @@ public class CookiesSesionesControlador extends BaseControlador {
             ctx.sessionAttribute("usuario", usuario);
             //redireccionando la vista con autorizacion.
             ctx.redirect("/zona-admin-clasica/");
+        });
+
+        app.get("/contexto", ctx -> {
+            ctx.req.setAttribute("variable-request", "valor"); //se mantiene hasta la respuesta del servidor.
+            ctx.sessionAttribute("variable-sesion", "....."); //asociado a la cookie sesion que crea el servidor. 30 min.
+            //aplicación del referencia del objeto de clase o de instancia que tenga acceso.
+            lista.add("asasd");
+
         });
 
     }

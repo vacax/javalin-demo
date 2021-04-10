@@ -61,6 +61,12 @@ public class Main {
         app.get("/fecha", ctx -> {
             ctx.result(""+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
         });
+
+        //Filtro para enviar el header de validación
+        app.after(ctx -> {
+            //System.out.println("Enviando el header de seguridad para el Service Worker");
+            ctx.header("Service-Worker-Allowed", "/");
+        });
     }
 
     /**

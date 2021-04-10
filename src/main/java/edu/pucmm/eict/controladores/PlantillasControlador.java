@@ -111,6 +111,7 @@ public class PlantillasControlador extends BaseControlador {
         List<Estudiante> listaEstudiante = new ArrayList<>();
         listaEstudiante.add(new Estudiante(20011136, "Carlos Camacho", "ITT"));
         listaEstudiante.add(new Estudiante(20011137, "Otro Estudiante", "ISC"));
+        listaEstudiante.add(new Estudiante(20011138, "Otro otro", "ISC"));
         return listaEstudiante;
     }
 }

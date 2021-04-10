@@ -24,9 +24,28 @@ public class CrudTradicionalControlador extends BaseControlador {
 
     /**
      * Las clases que implementan el sistema de plantilla están agregadas en PlantillasControlador.
+     * http://localhost:7000/crud-simple/listar
      */
     @Override
     public void aplicarRutas() {
+        app.routes(()->{
+            path("/path/", () -> {
+                before(ctx -> {
+                    System.out.println("Entrando a la ruta path...");
+                });
+                get("/", ctx -> {
+                    ctx.result("Ruta path /");
+                });
+
+                get("/compras", ctx -> {
+                    ctx.result("Ruta /path/compras");
+                });
+
+                get("/otro", ctx -> {
+                    ctx.result("Ruta /path/otro");
+                });
+            });
+        });
         app.routes(() -> {
             path("/crud-simple/", () -> {
 
