@@ -57,6 +57,37 @@ public class CookiesSesionesControlador extends BaseControlador {
         });
 
         /**
+         *
+         */
+        app.post("/login-cookies", ctx -> {
+            //recibiendo información del formulario.
+            String usuario = ctx.formParam("usuario");
+            String contrasena = ctx.formParam("contrasena");
+            if(usuario==null || contrasena == null){
+                //errror para procesar la información.
+                ctx.redirect("/formulario_cookie.html");
+                return;
+            }
+            //Estamos haciendo fake de un servicio de autenticacion, busque en un servicio.
+            ctx.cookie("usuario", usuario, 120);
+            ctx.cookie("nombre", "Nombre%20de%20Usuario%20"+usuario, 120);
+            //enviando a la vista.
+            ctx.redirect("/inicio-cookie");
+        });
+
+        /**
+         *
+         *
+         */
+        app.get("/inicio-cookie", ctx -> {
+            if(ctx.cookie("nombre") == null || ctx.cookie("usuario")== null){//no ha realizado el proceso de login.
+                ctx.redirect("/formulario_cookie.html");
+                return;
+            }
+            ctx.result("Hola "+ctx.cookie("nombre")+", gracias por su visita!");
+        });
+
+        /**
          * Creando una variable de sesion en el servidor asociado al usuario.
          * http://localhost:7000/contadorSesion
          */
