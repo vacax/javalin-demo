@@ -26,7 +26,7 @@ public class CookiesSesionesControlador extends BaseControlador {
          * en el cliente, en el objeto response, Javalin simplifica con un método directo.
          * http://localhost:7000/crearCookie/micookie/valor-de-la-cookie
          */
-        app.get("/crearCookie/:nombre/:valor", ctx -> {
+        app.get("/crearCookie/{nombre}/{valor}", ctx -> {
             //creando una cookie para dos minutos, el parametro indicando en segundos.
             //ctx.res.addCookie(new Cookie("key", "valor"));
             ctx.cookie(ctx.pathParam("nombre"), ctx.pathParam("valor"), 120);

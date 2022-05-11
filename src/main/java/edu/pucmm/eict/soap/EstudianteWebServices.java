@@ -2,9 +2,10 @@ package edu.pucmm.eict.soap;
 
 import edu.pucmm.eict.encapsulaciones.Estudiante;
 import edu.pucmm.eict.servicios.FakeServices;
+import jakarta.jws.WebMethod;
+import jakarta.jws.WebService;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+
 import java.util.ArrayList;
 import java.util.List;
 

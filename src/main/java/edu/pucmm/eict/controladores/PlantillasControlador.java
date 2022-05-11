@@ -48,9 +48,9 @@ public class PlantillasControlador extends BaseControlador {
                  * Validando el sistema de plantilla
                  * Ir a: http://localhost:7000/freemarker/datosEstudiante/20011136
                  */
-                get("/datosEstudiante/:matricula", ctx -> {
+                get("/datosEstudiante/{matricula}", ctx -> {
                     //tomando el parametro utl y validando el tipo.
-                    int matricula = ctx.pathParam("matricula", Integer.class).get();
+                    int matricula = ctx.pathParamAsClass("matricula", Integer.class).get();
                     Estudiante estudiante = new Estudiante(matricula, "Estudiante matricula: "+matricula, "ISC");
                     //
                     Map<String, Object> modelo = new HashMap<>();

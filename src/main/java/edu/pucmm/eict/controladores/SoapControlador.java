@@ -4,13 +4,14 @@ import com.sun.net.httpserver.HttpContext;
 import edu.pucmm.eict.soap.EstudianteWebServices;
 import edu.pucmm.eict.util.BaseControlador;
 import io.javalin.Javalin;
+import jakarta.xml.ws.Endpoint;
 import org.eclipse.jetty.http.spi.HttpSpiContextHandler;
 import org.eclipse.jetty.http.spi.JettyHttpContext;
 import org.eclipse.jetty.http.spi.JettyHttpServer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
-import javax.xml.ws.Endpoint;
+
 import java.lang.reflect.Method;
 
 
@@ -26,7 +27,7 @@ public class SoapControlador extends BaseControlador {
 
     @Override
     public void aplicarRutas() {
-        Server server = app.server().server();
+        Server server = app.jettyServer().server();
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         server.setHandler(contextHandlerCollection);
 

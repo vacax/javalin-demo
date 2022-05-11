@@ -1,11 +1,11 @@
 package edu.pucmm.eict.util;
 
-import io.javalin.core.security.Role;
 
+import io.javalin.core.security.RouteRole;
 /**
  * Enum para manejar los roles de la aplicacion.
  */
-public enum RolesApp implements Role {
+public enum RolesApp implements RouteRole {
     CUALQUIERA,
     LOGUEADO,
     ROLE_USUARIO,

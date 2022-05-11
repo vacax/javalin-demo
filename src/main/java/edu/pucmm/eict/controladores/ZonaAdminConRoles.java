@@ -5,6 +5,8 @@ import edu.pucmm.eict.servicios.FakeServices;
 import edu.pucmm.eict.util.BaseControlador;
 import edu.pucmm.eict.util.RolesApp;
 import io.javalin.Javalin;
+import io.javalin.core.security.RouteRole;
+import io.javalin.http.Handler;
 import org.slf4j.Logger;
 
 import java.util.Collections;
@@ -28,7 +30,7 @@ public class ZonaAdminConRoles extends BaseControlador {
         /**
          * Aplicando la configuracion para manejar los roles/
          */
-        app.config.accessManager((handler, ctx, permittedRoles) -> {
+        app._conf.accessManager((handler, ctx, permittedRoles) -> {
             //para obtener el usuario estaré utilizando el contexto de sesion.
             final Usuario usuario = ctx.sessionAttribute("usuario");
             System.out.println("Los roles permitidos: "+permittedRoles.toString());
@@ -67,21 +69,21 @@ public class ZonaAdminConRoles extends BaseControlador {
 
         app.routes(() -> {
            path("/zona-admin-role",() -> {
-               get("/", ctx -> {
+               get("/", (Handler) ctx -> {
                    ctx.result("Con permiso para acceder a la zona");
-               }, Collections.singleton(RolesApp.LOGUEADO));
+               }, RolesApp.LOGUEADO);
 
-               get("/admin", ctx -> {
+               get("/admin", (Handler) ctx -> {
                    ctx.result("Debe ser administrador");
-               }, Collections.singleton(RolesApp.ROLE_ADMIN));
+               }, RolesApp.ROLE_ADMIN);
 
-               get("/cliente", ctx -> {
+               get("/cliente", (Handler) ctx -> {
                    ctx.result("Debe ser cliente");
-               }, Collections.singleton(RolesApp.ROLE_USUARIO));
+               }, RolesApp.ROLE_USUARIO);
 
-               get("/otro-rol", ctx -> {
+               get("/otro-rol", (Handler) ctx -> {
                    ctx.result("otro cualquier rol");
-               }, Collections.singleton(RolesApp.CUALQUIERA));
+               }, RolesApp.CUALQUIERA);
 
            });
         });
