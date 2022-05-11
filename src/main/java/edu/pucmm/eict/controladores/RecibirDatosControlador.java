@@ -34,7 +34,7 @@ public class RecibirDatosControlador extends BaseControlador {
          * Ejemplo de parametros como parte de la URL, notar los ':' en el path.
          * http://localhost:7000/parametros/20011136/
          */
-        app.get("/parametros/:matricula/", ctx -> {
+        app.get("/parametros/{matricula}/", ctx -> {
             //TODO: metodo para validar matricula..
             ctx.result("El Estudiante tiene la matricula: "+ctx.pathParam("matricula"));
         });
@@ -44,16 +44,16 @@ public class RecibirDatosControlador extends BaseControlador {
          * Puedo hacer combinaciones
          * http://localhost:7000/parametros/20011136/nombre/carloscamacho
          */
-        app.get("/parametros/:matricula/nombre/:nombre", ctx -> {
+        app.get("/parametros/{matricula}/nombre/{nombre}", ctx -> {
             ctx.result("El Estudiante tiene la matricula: "+ctx.pathParam("matricula")+" - nombre: "+ctx.pathParam("nombre"));
         });
 
-        app.get("/parametros/:para1/:para2/:para3", ctx -> {
+        app.get("/parametros/{para1}/{para2}/{para3}", ctx -> {
             ctx.result("hhhhh");
         });
 
         //Llamada ambigua... puede que ejecute como que no.
-        app.get("/parametros/:para4/:para5/:para6", ctx -> {
+        app.get("/parametros/{para4}/{para5}/{para6}", ctx -> {
             ctx.result("kkkkkk");
         });
 

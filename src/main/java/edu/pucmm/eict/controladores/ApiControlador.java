@@ -32,8 +32,8 @@ public class ApiControlador extends BaseControlador {
                         ctx.json(fakeServices.listarEstudiante());
                     });
 
-                    get("/:matricula", ctx -> {
-                        ctx.json(fakeServices.getEstudiantePorMatricula(ctx.pathParam("matricula", Integer.class).get()));
+                    get("/{matricula}", ctx -> {
+                        ctx.json(fakeServices.getEstudiantePorMatricula(ctx.pathParamAsClass("matricula", Integer.class).get()));
                     });
 
                     post("/", ctx -> {
@@ -51,9 +51,9 @@ public class ApiControlador extends BaseControlador {
 
                     });
 
-                    delete("/:matricula", ctx -> {
+                    delete("/{matricula}", ctx -> {
                         //creando.
-                        ctx.json(fakeServices.eliminandoEstudiante(ctx.pathParam("matricula", Integer.class).get()));
+                        ctx.json(fakeServices.eliminandoEstudiante(ctx.pathParamAsClass("matricula", Integer.class).get()));
                     });
                 });
             });

@@ -80,7 +80,7 @@ public class CrudTradicionalControlador extends BaseControlador {
                  */
                 post("/crear", ctx -> {
                     //obteniendo la información enviada.
-                    int matricula = ctx.formParam("matricula", Integer.class).get();
+                    int matricula = ctx.formParamAsClass("matricula", Integer.class).get();
                     String nombre = ctx.formParam("nombre");
                     String carrera = ctx.formParam("carrera");
                     //
@@ -90,8 +90,8 @@ public class CrudTradicionalControlador extends BaseControlador {
                     ctx.redirect("/crud-simple/");
                 });
 
-                get("/visualizar/:matricula", ctx -> {
-                    Estudiante estudiante = fakeServices.getEstudiantePorMatricula(ctx.pathParam("matricula", Integer.class).get());
+                get("/visualizar/{matricula}", ctx -> {
+                    Estudiante estudiante = fakeServices.getEstudiantePorMatricula(ctx.pathParamAsClass("matricula", Integer.class).get());
                     //
                     Map<String, Object> modelo = new HashMap<>();
                     modelo.put("titulo", "Formulario Visaulizar Estudiante "+estudiante.getMatricula());
@@ -103,8 +103,8 @@ public class CrudTradicionalControlador extends BaseControlador {
                     ctx.render("/templates/crud-tradicional/crearEditarVisualizar.html", modelo);
                 });
 
-                get("/editar/:matricula", ctx -> {
-                    Estudiante estudiante = fakeServices.getEstudiantePorMatricula(ctx.pathParam("matricula", Integer.class).get());
+                get("/editar/{matricula}", ctx -> {
+                    Estudiante estudiante = fakeServices.getEstudiantePorMatricula(ctx.pathParamAsClass("matricula", Integer.class).get());
                     //
                     Map<String, Object> modelo = new HashMap<>();
                     modelo.put("titulo", "Formulario Editar Estudiante "+estudiante.getMatricula());
@@ -120,7 +120,7 @@ public class CrudTradicionalControlador extends BaseControlador {
                  */
                 post("/editar", ctx -> {
                     //obteniendo la información enviada.
-                    int matricula = ctx.formParam("matricula", Integer.class).get();
+                    int matricula = ctx.formParamAsClass("matricula", Integer.class).get();
                     String nombre = ctx.formParam("nombre");
                     String carrera = ctx.formParam("carrera");
                     //
@@ -133,8 +133,8 @@ public class CrudTradicionalControlador extends BaseControlador {
                 /**
                  * Puede ser implementando por el metodo post, por simplicidad utilizo el get. ;-D
                  */
-                get("/eliminar/:matricula", ctx -> {
-                    fakeServices.eliminandoEstudiante(ctx.pathParam("matricula", Integer.class).get());
+                get("/eliminar/{matricula}", ctx -> {
+                    fakeServices.eliminandoEstudiante(ctx.pathParamAsClass("matricula", Integer.class).get());
                     ctx.redirect("/crud-simple/");
                 });
 
