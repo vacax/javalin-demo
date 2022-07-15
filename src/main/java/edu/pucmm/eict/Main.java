@@ -69,9 +69,14 @@ public class Main {
 
         //Filtro para enviar el header de validación
         app.after(ctx -> {
-            //System.out.println("Enviando el header de seguridad para el Service Worker");
-            ctx.header("Service-Worker-Allowed", "/");
+            if(ctx.path().equalsIgnoreCase("/serviceworkers.js")){
+                System.out.println("Enviando el header de seguridad para el Service Worker");
+                ctx.header("Content-Type","application/javascript");
+                ctx.header("Service-Worker-Allowed", "/");
+            }
+
         });
+
     }
 
     /**

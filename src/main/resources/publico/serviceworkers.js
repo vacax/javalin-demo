@@ -10,7 +10,8 @@ var urlsToCache = [
     '/js/axios.min.js',
     '/js/jquery-3.2.1.min.js',
     '/html5/ejemploIndexedDb.html',
-    '/html5/offline.html'
+    '/html5/offline.html',
+    '/html5/ejemploWorker.html'
 ];
 //ruta para fallback.
 var fallback = "/html5/offline.html"
