@@ -15,11 +15,11 @@ repositories {
 
 dependencies {
     //Libreria test
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     //dependencia de Javalin
-    implementation 'io.javalin:javalin:4.5.0'
+    implementation 'io.javalin:javalin:4.6.4'
 
     //manejo de log.
     implementation "org.slf4j:slf4j-simple:1.7.36"
@@ -28,24 +28,25 @@ dependencies {
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.14.3'
 
     //Procesamiento JSON.
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
-    //Agregando el OpenApi3
-    implementation "io.javalin:javalin-openapi:4.0.0"
+    //Agregando el OpenApi4
+    implementation 'io.javalin:javalin-openapi:4.6.1'
 
     //sistemas de plantilla:
-    implementation "org.freemarker:freemarker:2.3.30"
-    implementation 'org.thymeleaf:thymeleaf:3.0.12.RELEASE'
-    implementation "org.apache.velocity:velocity-engine-core:2.2"
+    implementation 'org.freemarker:freemarker:2.3.31'
+    implementation 'org.thymeleaf:thymeleaf:3.0.15.RELEASE'
+    implementation 'org.apache.velocity:velocity-engine-core:2.3'
 
     //libreria para SOAP de Jetty https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http-spi
-    implementation group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '11.0.9'
+    implementation group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '9.4.46.v20220331'
 
     //incluyendo las librerias de javax.ee en java 11.
     //https://www.baeldung.com/java-soap-web-service
     implementation "jakarta.xml.ws:jakarta.xml.ws-api:3.0.1"
     implementation "com.sun.xml.ws:jaxws-rt:3.0.2"
     implementation "com.sun.xml.ws:jaxws-ri:3.0.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:3.0.2"
 }
 
 shadowJar{

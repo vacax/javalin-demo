@@ -30,11 +30,18 @@ public class Main {
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
             config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
+            /*config.server(() -> {
+                *//**
+                 * Desde la versión 4.5 podemos tener crear el objeto de Server Jetty y
+                 * configurar lo necesario, en nuestro caso la SOAP.
+                 *//*
+                return new SoapControlador().agregarWebServicesSoap();
+            });*/
 
         });
 
         //El contexto SOAP debe estar creando antes de inicio del servidor.
-        new SoapControlador(app).aplicarRutas();
+        //new SoapControlador(app).aplicarRutas();
 
         //
         app.start(getHerokuAssignedPort());
