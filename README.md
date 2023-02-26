@@ -21,3 +21,4 @@ Proyecto demostración de los conceptos:
 
 * Java 17
 * Gradle 7.4
+* Javalin 4.6.1
