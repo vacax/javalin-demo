@@ -4,10 +4,10 @@ import edu.pucmm.eict.encapsulaciones.Estudiante;
 import edu.pucmm.eict.encapsulaciones.Usuario;
 import edu.pucmm.eict.util.BaseControlador;
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.JavalinRenderer;
-import io.javalin.plugin.rendering.template.JavalinFreemarker;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
-import io.javalin.plugin.rendering.template.JavalinVelocity;
+import io.javalin.rendering.JavalinRenderer;
+import io.javalin.rendering.template.JavalinFreemarker;
+import io.javalin.rendering.template.JavalinThymeleaf;
+import io.javalin.rendering.template.JavalinVelocity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ public class PlantillasControlador extends BaseControlador {
      * Registrando los sistemas de plantillas utilizados.
      */
     private void registrandoPlantillas(){
-        //registrando los sistemas de plantilla.
-        JavalinRenderer.register(JavalinFreemarker.INSTANCE, ".ftl");
-        JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
-        JavalinRenderer.register(JavalinVelocity.INSTANCE, ".vm");
+        //Registrando los templates. es necesario incluir la libería io.javalin:javalin-rendering:5.3.2
+        JavalinRenderer.register(new JavalinFreemarker(), ".ftl");
+        JavalinRenderer.register(new JavalinThymeleaf(), ".html");
+        JavalinRenderer.register(new JavalinVelocity(), ".vm");
     }
 
     @Override

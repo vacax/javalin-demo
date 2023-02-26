@@ -29,6 +29,10 @@ public class CrudTradicionalControlador extends BaseControlador {
     @Override
     public void aplicarRutas() {
         app.routes(()->{
+
+            /**
+             * Ejemplo de como agrupar los endpoint utilizados.
+             */
             path("/path/", () -> {
                 before(ctx -> {
                     System.out.println("Entrando a la ruta path...");

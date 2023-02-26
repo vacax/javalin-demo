@@ -5,7 +5,6 @@ import edu.pucmm.eict.servicios.FakeServices;
 import edu.pucmm.eict.util.BaseControlador;
 import edu.pucmm.eict.util.RolesApp;
 import io.javalin.Javalin;
-import io.javalin.core.security.RouteRole;
 import io.javalin.http.Handler;
 import org.slf4j.Logger;
 
@@ -30,7 +29,7 @@ public class ZonaAdminConRoles extends BaseControlador {
         /**
          * Aplicando la configuracion para manejar los roles/
          */
-        app._conf.accessManager((handler, ctx, permittedRoles) -> {
+        app.cfg.accessManager((handler, ctx, permittedRoles) -> {
             //para obtener el usuario estaré utilizando el contexto de sesion.
             final Usuario usuario = ctx.sessionAttribute("usuario");
             System.out.println("Los roles permitidos: "+permittedRoles.toString());

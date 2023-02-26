@@ -2,12 +2,16 @@ package edu.pucmm.eict;
 
 import edu.pucmm.eict.controladores.*;
 import io.javalin.Javalin;
-import io.javalin.core.util.RouteOverviewPlugin;
 import io.javalin.http.staticfiles.Location;
-import io.javalin.plugin.openapi.OpenApiOptions;
-import io.javalin.plugin.openapi.OpenApiPlugin;
-import io.javalin.plugin.openapi.ui.SwaggerOptions;
-import io.swagger.v3.oas.models.info.Info;
+import io.javalin.openapi.JsonSchemaLoader;
+import io.javalin.openapi.JsonSchemaResource;
+import io.javalin.openapi.plugin.OpenApiPlugin;
+import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
+import io.javalin.openapi.plugin.redoc.ReDocConfiguration;
+import io.javalin.openapi.plugin.redoc.ReDocPlugin;
+import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
+import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,28 +24,74 @@ public class Main {
         String mensaje = "Hola Mundo en Javalin :-D";
         System.out.println(mensaje);
 
-        //Creando la instancia del servidor.
+        //Creando la instancia del servidor y configurando.
         Javalin app = Javalin.create(config ->{
-            config.addStaticFiles(staticFileConfig -> {
+            //configurando los documentos estaticos.
+            config.staticFiles.add(staticFileConfig -> {
                 staticFileConfig.hostedPath = "/";
                 staticFileConfig.directory = "/publico";
                 staticFileConfig.location = Location.CLASSPATH;
+                staticFileConfig.precompress=false;
+                staticFileConfig.aliasCheck=null;
             });
-            config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
-            config.enableCorsForAllOrigins();
-            config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
-            /*config.server(() -> {
-                *//**
-                 * Desde la versión 4.5 podemos tener crear el objeto de Server Jetty y
-                 * configurar lo necesario, en nuestro caso la SOAP.
-                 *//*
-                return new SoapControlador().agregarWebServicesSoap();
-            });*/
+
+            //Habilitando el CORS. Ver: https://javalin.io/plugins/cors#getting-started para más opciones.
+            config.plugins.enableCors(corsContainer -> {
+                corsContainer.add(corsPluginConfig -> {
+                    corsPluginConfig.anyHost();
+                });
+            });
+
+            //habilitando el plugins de las rutas definidas.
+            config.plugins.enableRouteOverview("/rutas");
+
+            //Configurando el servicio SOAP en nuestro proyecto.
+            //config.jetty.server(() -> new SoapControlador().agregarWebServicesSoap());
+
+            //
+            config.plugins.register(new OpenApiPlugin(
+                            new OpenApiPluginConfiguration()
+                                    .withDocumentationPath("/openapi")
+                                    .withDefinitionConfiguration((version, definition) -> definition
+                                            .withOpenApiInfo((openApiInfo) -> {
+                                                openApiInfo.setTitle("Awesome App");
+                                                openApiInfo.setVersion("1.0.0");
+                                            })
+                                            .withServer((openApiServer) -> {
+                                                openApiServer.setUrl(("http://localhost:{port}{basePath}/" + version + "/"));
+                                                openApiServer.setDescription("Server description goes here");
+                                                openApiServer.addVariable("port", "8080", new String[] { "7070", "8080" }, "Port of the server");
+                                                openApiServer.addVariable("basePath", "", new String[] { "", "v1" }, "Base path of the server");
+                                            })
+                                           /* // Based on official example: https://swagger.io/docs/specification/authentication/oauth2/
+                                            .withSecurity(new SecurityConfiguration()
+                                                    .withSecurityScheme("BasicAuth", new BasicAuth())
+                                            )
+                                            .withDefinitionProcessor(content -> { // you can add whatever you want to this document using your favourite json api
+                                                content.set("test", new TextNode("Value"));
+                                                return content.toPrettyString();
+                                            }))*/
+                    )
+            ));
+
+            SwaggerConfiguration swaggerConfiguration = new SwaggerConfiguration();
+            //swaggerConfiguration.setDocumentationPath(deprecatedDocsPath);
+            config.plugins.register(new SwaggerPlugin(swaggerConfiguration));
+
+            ReDocConfiguration reDocConfiguration = new ReDocConfiguration();
+            //reDocConfiguration.setDocumentationPath(deprecatedDocsPath);
+            config.plugins.register(new ReDocPlugin(reDocConfiguration));
+
+            for (JsonSchemaResource generatedJsonSchema : new JsonSchemaLoader().loadGeneratedSchemes()) {
+                System.out.println(generatedJsonSchema.getName());
+                System.out.println(generatedJsonSchema.getContentAsString());
+            }
+
 
         });
 
-        //El contexto SOAP debe estar creando antes de inicio del servidor.
-        //new SoapControlador(app).aplicarRutas();
+        //
+        new SoapControlador(app).aplicarRutas();
 
         //
         app.start(getHerokuAssignedPort());
@@ -98,11 +148,11 @@ public class Main {
         return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
     }
 
-    private static OpenApiOptions getOpenApiOptions() {
+    /*private static OpenApiOptions getOpenApiOptions() {
         Info applicationInfo = new Info()
                 .version("1.0")
                 .description("My Application");
         return new OpenApiOptions(applicationInfo).path("/openapi").swagger(new SwaggerOptions("/openapi-ui"));
-    }
+    }*/
 
 }

@@ -6,6 +6,7 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Clase para implementar un servicio web basado en SOAP
  */
 @WebService
-public class EstudianteWebServices {
+public class EstudianteWebServices implements Serializable {
 
     private FakeServices fakeServices = FakeServices.getInstancia();
 
