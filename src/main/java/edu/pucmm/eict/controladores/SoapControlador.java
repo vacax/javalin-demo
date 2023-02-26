@@ -2,6 +2,8 @@ package edu.pucmm.eict.controladores;
 
 import com.sun.net.httpserver.HttpContext;
 import edu.pucmm.eict.soap.EstudianteWebServices;
+import edu.pucmm.eict.util.BaseControlador;
+import io.javalin.Javalin;
 import jakarta.xml.ws.Endpoint;
 import org.eclipse.jetty.http.spi.HttpSpiContextHandler;
 import org.eclipse.jetty.http.spi.JettyHttpContext;
@@ -16,15 +18,16 @@ import java.lang.reflect.Method;
 /**
  * Clase para implementar JAX-WS
  */
-public class SoapControlador {
+public class SoapControlador extends BaseControlador {
 
 
-    public SoapControlador() {
-
+    public SoapControlador(Javalin app) {
+        super(app);
     }
 
-    public Server agregarWebServicesSoap() {
-        Server server = new Server();
+    @Override
+    public void aplicarRutas() {
+        Server server = app.jettyServer().server();
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         server.setHandler(contextHandlerCollection);
 
@@ -40,7 +43,6 @@ public class SoapControlador {
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        return server;
     }
 
     /**
