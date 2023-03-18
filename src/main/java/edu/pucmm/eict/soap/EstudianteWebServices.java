@@ -42,6 +42,7 @@ public class EstudianteWebServices implements Serializable {
 
     @WebMethod
     public Estudiante crearEstudiante(Estudiante estudiante){
+        System.out.println("Recibiendo: "+estudiante.toString());
         return fakeServices.crearEstudiante(estudiante);
     }
 

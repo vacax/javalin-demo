@@ -5,8 +5,10 @@ import edu.pucmm.eict.servicios.FakeServices;
 import edu.pucmm.eict.util.BaseControlador;
 import edu.pucmm.eict.util.NoExisteEstudianteException;
 import io.javalin.Javalin;
-import static io.javalin.apibuilder.ApiBuilder.*;
+import io.javalin.openapi.OpenApi;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+@OpenApi(path = "/api")
 public class ApiControlador extends BaseControlador {
 
     private FakeServices fakeServices = FakeServices.getInstancia();

@@ -62,4 +62,13 @@ public class Estudiante {
     public int hashCode() {
         return Objects.hash(matricula);
     }
+
+    @Override
+    public String toString() {
+        return "Estudiante{" +
+                "matricula=" + matricula +
+                ", nombre='" + nombre + '\'' +
+                ", carrera='" + carrera + '\'' +
+                '}';
+    }
 }
