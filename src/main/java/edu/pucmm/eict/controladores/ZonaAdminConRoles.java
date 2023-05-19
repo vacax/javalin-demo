@@ -56,12 +56,18 @@ public class ZonaAdminConRoles extends BaseControlador {
             }
 
             //validando que el usuario registrando tiene el rol permitido.
+            boolean encontrado = false;
             for(RolesApp role : usuarioTmp.getListaRoles() ) {
                 if (permittedRoles.contains(role)) {
                     System.out.println(String.format("El Usuario: %s - con el Rol: %s tiene permiso", usuarioTmp.getUsuario(), role.name()));
                     handler.handle(ctx);
+                    encontrado = true;
                     break;
                 }
+            }
+            //
+            if(!encontrado){
+                ctx.status(401).result("No tiene roles para acceder...");
             }
 
         });
