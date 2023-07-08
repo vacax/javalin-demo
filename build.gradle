@@ -24,7 +24,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     //dependencia de Javalin
-    implementation 'io.javalin:javalin:5.3.2'
+    implementation 'io.javalin:javalin:5.6.1'
 
     //manejo de log.
     implementation "org.slf4j:slf4j-simple:2.0.3"
@@ -36,7 +36,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.1'
 
     // En la versión 5.3.X separaron las clases del renderizado en otro proyecto
-    implementation "io.javalin:javalin-rendering:5.3.2"
+    implementation "io.javalin:javalin-rendering:5.6.0"
 
     //sistemas de plantilla:
     implementation 'org.freemarker:freemarker:2.3.32'
