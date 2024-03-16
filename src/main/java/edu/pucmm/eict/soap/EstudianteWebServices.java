@@ -51,4 +51,9 @@ public class EstudianteWebServices implements Serializable {
         return fakeServices.actualizarEstudiante(estudiante);
     }
 
+    @WebMethod
+    public boolean eliminarEstudiante(Estudiante estudiante){
+        return fakeServices.eliminandoEstudiante(estudiante.getMatricula());
+    }
+
 }
