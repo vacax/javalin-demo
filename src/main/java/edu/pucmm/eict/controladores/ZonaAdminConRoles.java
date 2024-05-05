@@ -6,6 +6,7 @@ import edu.pucmm.eict.util.BaseControlador;
 import edu.pucmm.eict.util.RolesApp;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import io.javalin.http.UnauthorizedResponse;
 import org.slf4j.Logger;
 
 import java.util.Collections;
@@ -26,23 +27,25 @@ public class ZonaAdminConRoles extends BaseControlador {
     @Override
     public void aplicarRutas() {
 
-        /**
-         * Aplicando la configuracion para manejar los roles/
+        /*
+         * Aplicando la configuracion para manejar los roles
          */
-        app.cfg.accessManager((handler, ctx, permittedRoles) -> {
+
+        app.beforeMatched("/zona-admin-role",ctx -> {
+            //Si el endpoint no tiene roles asignados no es necesario verificarlo.
+            if(ctx.routeRoles().isEmpty()){
+                return;
+            }
+
             //para obtener el usuario estaré utilizando el contexto de sesion.
             final Usuario usuario = ctx.sessionAttribute("usuario");
-            System.out.println("Los roles permitidos: "+permittedRoles.toString());
-            if(permittedRoles.isEmpty()){
-                handler.handle(ctx);
-                return;
+            if (usuario == null) {
+                throw new UnauthorizedResponse();
             }
-            //validando si existe el usuario.
-            if(usuario == null){
-                System.out.println("No tiene permiso para acceder..");
-                ctx.status(401).result("No tiene permiso para acceder...");
-                return;
-            }
+
+            //listando los roles del endpoint.
+            System.out.println("Los roles asignados a la ruta: "+ctx.routeRoles());
+
             //buscando el permiso del usuario.
             Usuario usuarioTmp = fakeServices.getListaUsuarios().stream()
                     .filter(u -> u.getUsuario().equalsIgnoreCase(usuario.getUsuario()))
@@ -51,47 +54,43 @@ public class ZonaAdminConRoles extends BaseControlador {
 
             if(usuarioTmp==null){
                 System.out.println("Existe el usuario pero sin roles para acceder.");
-                ctx.status(401).result("No tiene roles para acceder...");
-                return;
+                throw new UnauthorizedResponse("No tiene roles para acceder...");
             }
+
+            System.out.println("Los roles asignados en el usuario: "+usuarioTmp.getListaRoles().toString());
 
             //validando que el usuario registrando tiene el rol permitido.
             boolean encontrado = false;
             for(RolesApp role : usuarioTmp.getListaRoles() ) {
-                if (permittedRoles.contains(role)) {
+                if (ctx.routeRoles().contains(role)) {
                     System.out.println(String.format("El Usuario: %s - con el Rol: %s tiene permiso", usuarioTmp.getUsuario(), role.name()));
-                    handler.handle(ctx);
                     encontrado = true;
                     break;
                 }
             }
             //
             if(!encontrado){
-                ctx.status(401).result("No tiene roles para acceder...");
+                throw new UnauthorizedResponse("No tiene roles para acceder...");
             }
 
         });
 
-        app.routes(() -> {
-           path("/zona-admin-role",() -> {
-               get("/", (Handler) ctx -> {
-                   ctx.result("Con permiso para acceder a la zona");
-               }, RolesApp.LOGUEADO);
 
-               get("/admin", (Handler) ctx -> {
-                   ctx.result("Debe ser administrador");
-               }, RolesApp.ROLE_ADMIN);
+        app.get("/zona-admin-role", (Handler) ctx -> {
+            ctx.result("Con permiso para acceder a la zona");
+        }, RolesApp.LOGUEADO);
 
-               get("/cliente", (Handler) ctx -> {
-                   ctx.result("Debe ser cliente");
-               }, RolesApp.ROLE_USUARIO);
+        app.get("/zona-admin-role/admin", (Handler) ctx -> {
+            ctx.result("Debe ser administrador");
+        }, RolesApp.ROLE_ADMIN);
 
-               get("/otro-rol", (Handler) ctx -> {
-                   ctx.result("otro cualquier rol");
-               }, RolesApp.CUALQUIERA);
+        app.get("/zona-admin-role/cliente", (Handler) ctx -> {
+            ctx.result("Debe ser cliente");
+        }, RolesApp.ROLE_USUARIO);
 
-           });
-        });
+        app.get("/zona-admin-role/otro-rol", (Handler) ctx -> {
+            ctx.result("otro cualquier rol");
+        }, RolesApp.CUALQUIERA);
 
 
     }
