@@ -3,19 +3,12 @@ package edu.pucmm.eict;
 import edu.pucmm.eict.controladores.*;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
-import io.javalin.openapi.JsonSchemaLoader;
-import io.javalin.openapi.JsonSchemaResource;
-import io.javalin.openapi.OpenApi;
-import io.javalin.openapi.plugin.OpenApiPlugin;
-import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
-import io.javalin.openapi.plugin.redoc.ReDocConfiguration;
-import io.javalin.openapi.plugin.redoc.ReDocPlugin;
-import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
-import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
-
+import io.javalin.rendering.template.JavalinThymeleaf;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
 
@@ -36,63 +29,46 @@ public class Main {
                 staticFileConfig.aliasCheck=null;
             });
 
-            //Habilitando el CORS. Ver: https://javalin.io/plugins/cors#getting-started para más opciones.
-            config.plugins.enableCors(corsContainer -> {
-                corsContainer.add(corsPluginConfig -> {
-                    corsPluginConfig.anyHost();
-                });
-            });
-
-            //habilitando el plugins de las rutas definidas.
-            config.plugins.enableRouteOverview("/rutas");
-
-            //Configurando el servicio SOAP en nuestro proyecto.
-            //config.jetty.server(() -> new SoapControlador().agregarWebServicesSoap());
+            //Confifgurar el sistema de plantilla por defecto.
+            config.fileRenderer(new JavalinThymeleaf());
 
             //
-            config.plugins.register(new OpenApiPlugin(
-                            new OpenApiPluginConfiguration()
-                                    .withDocumentationPath("/openapi")
-                                    .withDefinitionConfiguration((version, definition) -> definition
-                                            .withOpenApiInfo((openApiInfo) -> {
-                                                openApiInfo.setTitle("Awesome App");
-                                                openApiInfo.setVersion("1.0.0");
-                                            })
-                                            .withServer((openApiServer) -> {
-                                                openApiServer.setUrl(("http://localhost:{port}{basePath}/" + version + "/"));
-                                                openApiServer.setDescription("Server description goes here");
-                                                openApiServer.addVariable("port", "8080", new String[] { "7070", "8080" }, "Port of the server");
-                                                openApiServer.addVariable("basePath", "", new String[] { "", "v1" }, "Base path of the server");
-                                            })
-                                           /* // Based on official example: https://swagger.io/docs/specification/authentication/oauth2/
-                                            .withSecurity(new SecurityConfiguration()
-                                                    .withSecurityScheme("BasicAuth", new BasicAuth())
-                                            )
-                                            .withDefinitionProcessor(content -> { // you can add whatever you want to this document using your favourite json api
-                                                content.set("test", new TextNode("Value"));
-                                                return content.toPrettyString();
-                                            }))*/
-                    )
-            ));
+            config.router.apiBuilder(() -> {
+                path("/api",() -> {
 
-            SwaggerConfiguration swaggerConfiguration = new SwaggerConfiguration();
-            //swaggerConfiguration.setDocumentationPath(deprecatedDocsPath);
-            config.plugins.register(new SwaggerPlugin(swaggerConfiguration));
+                    path("/estudiante", () -> {
+                        get(ApiControlador::listarEstudiantes);
+                        post(ApiControlador::crearEstudiante);
+                        put(ApiControlador::actualizarEstudiante);
+                        path("/{matricula}", () -> {
+                            get(ApiControlador::estudiantePorMatricula);
+                            delete(ApiControlador::eliminarEstudiante);
+                        });
+                    });
 
-            ReDocConfiguration reDocConfiguration = new ReDocConfiguration();
-            //reDocConfiguration.setDocumentationPath(deprecatedDocsPath);
-            config.plugins.register(new ReDocPlugin(reDocConfiguration));
+                });
 
-            for (JsonSchemaResource generatedJsonSchema : new JsonSchemaLoader().loadGeneratedSchemes()) {
-                System.out.println(generatedJsonSchema.getName());
-                System.out.println(generatedJsonSchema.getContentAsString());
-            }
+                /**
+                 * Las clases que implementan el sistema de plantilla están agregadas en PlantillasControlador.
+                 * http://localhost:7000/crud-simple/listar
+                 */
+                path("/crud-simple/", () -> {
+                    get(ctx -> {
+                        ctx.redirect("/crud-simple/listar");
+                    });
+                    get("/listar",CrudTradicionalControlador::listar);
+                    get("/crear",CrudTradicionalControlador::crearEstudianteForm);
+                    post("/crear",CrudTradicionalControlador::procesarCreacionEstudiante);
+                    get("/visualizar/{matricula}",CrudTradicionalControlador::visualizarEstudiante);
+                    get("/editar/{matricula}",CrudTradicionalControlador::editarEstudianteForm);
+                    post("/editar",CrudTradicionalControlador::procesarEditarEstudiante);
+                    delete("/eliminar/{matricula}",CrudTradicionalControlador::eliminarEstudiante);
+                });
+
+            });
 
 
         });
-
-        //
-        new SoapControlador(app).aplicarRutas();
 
         //
         app.start(getHerokuAssignedPort());
@@ -112,13 +88,8 @@ public class Main {
         new ExcepcionesControlador(app).aplicarRutas();
         //Manejo de plantillas.
         new PlantillasControlador(app).aplicarRutas();
-        //Manejo de Api.
-        new ApiControlador(app).aplicarRutas();
         //Concepto de seguridad con roles.
         new ZonaAdminConRoles(app).aplicarRutas();
-        //
-        new CrudTradicionalControlador(app).aplicarRutas();
-
 
         //Endpoint ejemplos html5.
         app.get("/fecha", ctx -> {
@@ -148,12 +119,5 @@ public class Main {
         }
         return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
     }
-
-    /*private static OpenApiOptions getOpenApiOptions() {
-        Info applicationInfo = new Info()
-                .version("1.0")
-                .description("My Application");
-        return new OpenApiOptions(applicationInfo).path("/openapi").swagger(new SwaggerOptions("/openapi-ui"));
-    }*/
 
 }

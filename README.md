@@ -19,6 +19,6 @@ Proyecto demostración de los conceptos:
  
 ## Requiere:
 
-* Java 17
+* Java 21
 * Gradle 7.5.1
-* Javalin 5.6.1
+* Javalin 6.1.3

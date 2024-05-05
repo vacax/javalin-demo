@@ -5,65 +5,51 @@ import edu.pucmm.eict.servicios.FakeServices;
 import edu.pucmm.eict.util.BaseControlador;
 import edu.pucmm.eict.util.NoExisteEstudianteException;
 import io.javalin.Javalin;
-import io.javalin.openapi.OpenApi;
+import io.javalin.apibuilder.EndpointGroup;
+import io.javalin.http.Context;
+import io.javalin.http.NotFoundResponse;
+import org.jetbrains.annotations.NotNull;
+
 
 import static io.javalin.apibuilder.ApiBuilder.*;
-@OpenApi(path = "/api")
-public class ApiControlador extends BaseControlador {
 
-    private FakeServices fakeServices = FakeServices.getInstancia();
+public class ApiControlador  {
 
-    public ApiControlador(Javalin app) {
-        super(app);
+    private final static FakeServices fakeServices = FakeServices.getInstancia();
+
+
+    public static void listarEstudiantes(@NotNull Context ctx) throws Exception {
+        ctx.json(fakeServices.listarEstudiante());
     }
 
-    @Override
-    public void aplicarRutas() {
-        app.routes(() -> {
-            path("/api", () -> {
-                /**
-                 * Ejemplo de una API REST, implementando el CRUD
-                 * ir a
-                 */
-                path("/estudiante", () -> {
-                    after(ctx -> {
-                        ctx.header("Content-Type", "application/json");
-                    });
+    public static void estudiantePorMatricula(@NotNull Context ctx) throws Exception {
+        Estudiante es = fakeServices.getEstudiantePorMatricula(ctx.pathParamAsClass("matricula", Integer.class).get());
 
-                    get("/", ctx -> {
-                        ctx.json(fakeServices.listarEstudiante());
-                    });
-
-                    get("/{matricula}", ctx -> {
-                        ctx.json(fakeServices.getEstudiantePorMatricula(ctx.pathParamAsClass("matricula", Integer.class).get()));
-                    });
-
-                    post("/", ctx -> {
-                        //parseando la informacion del POJO debe venir en formato json.
-                        Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
-                        //creando.
-                        ctx.json(fakeServices.crearEstudiante(tmp));
-                    });
-
-                    put("/", ctx -> {
-                        //parseando la informacion del POJO.
-                        Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
-                        //creando.
-                        ctx.json(fakeServices.actualizarEstudiante(tmp));
-
-                    });
-
-                    delete("/{matricula}", ctx -> {
-                        //creando.
-                        ctx.json(fakeServices.eliminandoEstudiante(ctx.pathParamAsClass("matricula", Integer.class).get()));
-                    });
-                });
-            });
-        });
-
-        app.exception(NoExisteEstudianteException.class, (exception, ctx) -> {
-            ctx.status(404);
-            ctx.json(""+exception.getLocalizedMessage());
-        });
+        if(es!=null){
+            ctx.json(es);
+        }else{
+            throw new NotFoundResponse("Estudiante no encontrado");
+        }
     }
+
+    public static void crearEstudiante(@NotNull Context ctx) throws Exception {
+        //parseando la informacion del POJO debe venir en formato json.
+        Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
+        //creando.
+        ctx.json(fakeServices.crearEstudiante(tmp));
+    }
+
+    public static void actualizarEstudiante(@NotNull Context ctx) throws Exception {
+        //parseando la informacion del POJO debe venir en formato json.
+        Estudiante tmp = ctx.bodyAsClass(Estudiante.class);
+        //creando.
+        ctx.json(fakeServices.actualizarEstudiante(tmp));
+    }
+
+    public static void eliminarEstudiante(@NotNull Context ctx) throws Exception {
+        //parseando la informacion del POJO debe venir en formato json.
+        ctx.json(fakeServices.eliminandoEstudiante(ctx.pathParamAsClass("matricula", Integer.class).get()));
+    }
+
+
 }
