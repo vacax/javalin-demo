@@ -3,6 +3,7 @@ package edu.pucmm.eict;
 import edu.pucmm.eict.controladores.*;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import io.javalin.plugin.bundled.RouteOverviewPlugin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
 import java.text.SimpleDateFormat;
@@ -67,7 +68,7 @@ public class Main {
 
             });
 
-
+            config.registerPlugin(new RouteOverviewPlugin());
         });
 
         //
